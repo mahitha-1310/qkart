@@ -6,9 +6,11 @@ import React, { useState } from "react";
 import { config } from "../App";
 import Footer from "./Footer";
 import Header from "./Header";
+import { useHistory, Link } from "react-router-dom";
 import "./Register.css";
 
 const Register = () => {
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const[data,setData]=useState({ username: "", password: "", confirmPassword:"" });
   const [isLoading, setIsLoading] = useState(false)
@@ -22,7 +24,6 @@ const Register = () => {
     setData({...data, confirmPassword: event.target.value});
   }
 
-  // TODO: CRIO_TASK_MODULE_REGISTER - Implement the register function
   /**
    * Definition for register handler
    * - Function to be called when the user clicks on the register button or submits the register form
@@ -55,6 +56,7 @@ const Register = () => {
       const res = await axios.post(config.endpoint+"/auth/register", registration);
       
       enqueueSnackbar("Registered successfully",{variant:"success"})
+      history.push("/login")
     } catch (e) {
       try{
         enqueueSnackbar(e.response.data.message,{variant:"error"})
@@ -107,15 +109,17 @@ const Register = () => {
     }
   };
 
+
   return (
-    <Box 
+    <Box
       display="flex"
       flexDirection="column"
       justifyContent="space-between"
       minHeight="100vh"
     >
-      <Header hasHiddenAuthButtons />
-      <Box className="content" >
+      <Header hasHiddenAuthButtons ={true}/>
+      
+      <Box className="content">
         <Stack spacing={2} className="form">
           <h2 className="title">Register</h2>
           <TextField
@@ -161,9 +165,9 @@ const Register = () => {
 
           <p className="secondary-action">
             Already have an account?{" "}
-             <a className="link" href="#">
+            <Link to="/login">
               Login here
-             </a>
+            </Link>
           </p>
         </Stack>
       </Box>
