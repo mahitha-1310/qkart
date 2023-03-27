@@ -4,6 +4,9 @@ import Box from "@mui/material/Box";
 import React from "react";
 import "./Header.css";
 import { useHistory, Link } from "react-router-dom";
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const Header = ({ children, hasHiddenAuthButtons }) => {
     return (
@@ -11,6 +14,10 @@ const Header = ({ children, hasHiddenAuthButtons }) => {
         <Box className="header-title">
             <img src="logo_light.svg" alt="QKart-icon"></img>
         </Box>
+        
+          
+        {children}
+          
         {hasHiddenAuthButtons?
           (<Link to="/" style={{textDecoration :'none'}}>
             <Button
@@ -41,19 +48,23 @@ const Header = ({ children, hasHiddenAuthButtons }) => {
           :
           (
             <Stack direction="row" spacing={2}>
-            <Link to="/register" style={{textDecoration :'none'}}>
-              <Button className="button" variant="contained">
-              Register Now
-              </Button>
-            </Link>
+            
             <Link to="/login" style={{textDecoration :'none'}}>
               <Button className="explore-button" variant="text">
                 Login
               </Button>
             </Link>
+
+            <Link to="/register" style={{textDecoration :'none'}}>
+              <Button className="button" variant="contained">
+              Register
+              </Button>
+            </Link>
+            
             </Stack>
           )) 
         }
+        
       </Box>
     );
 };
