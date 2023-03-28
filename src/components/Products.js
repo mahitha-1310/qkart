@@ -331,7 +331,8 @@ const Products = () => {
         placeholder="Search for items/categories"
         name="search"
         onChange={(event)=>debounceSearch(event,time)}/>
-
+<Grid container>
+          <Grid xs={12} md={username ? 9 : 12}>
        <Grid container>
          <Grid item className="product-grid">
            <Box className="hero">
@@ -347,11 +348,12 @@ const Products = () => {
         // <SentimentDissatisfied style={{ margin: "1rem auto" }} /> 
         // <p>No products found</p> 
         // </Box> )} */}
-        <Grid container>
-          <Grid xs={12} md={username ? 9 : 12}>
+        
       {isLoading ?<>
+        <Box style={{display: 'flex', flexDirection:"column",justifyContent:'center',alignItems:'center', width: "100%", height: "300px"}}> 
         <CircularProgress style={{margin:"auto"}} />
         <p>Loading Products</p>
+        </Box>
        </>
        :
       

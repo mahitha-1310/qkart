@@ -73,6 +73,27 @@ import "./Cart.css";
 };
 
 
+// TODO: CRIO_TASK_MODULE_CHECKOUT - Implement function to return total cart quantity
+/**
+ * Return the sum of quantities of all products added to the cart
+ *
+ * @param { Array.<CartItem> } items
+ *    Array of objects with complete data on products in cart
+ *
+ * @returns { Number }
+ *    Total quantity of products added to the cart
+ *
+ */
+ export const getTotalItems = (items = []) => { 
+  let itemsCount = items.map((item) => { 
+    let count = 0; if (item.productId) count++; 
+    return count; }); 
+    return itemsCount.reduce((acc, curr) => { 
+      return acc + curr; 
+    }, 0); 
+    };
+
+// TODO: CRIO_TASK_MODULE_CHECKOUT - Add static quantity view for Checkout page cart
 /**
  * Component to display the current quantity for a product and + and - buttons to update product quantity on cart
  * 
@@ -85,6 +106,8 @@ import "./Cart.css";
  * @param {Function} handleDelete
  *    Handler function which reduces the quantity of a product in cart by 1
  * 
+ * @param {Boolean} isReadOnly
+ *    If product quantity on cart is to be displayed as read only without the + - options to change quantity
  * 
  */
 const ItemQuantity = ({
@@ -107,6 +130,26 @@ const ItemQuantity = ({
   );
 };
 
+let OrderDetailsView = ({ items = [] }) => { 
+  return (<><Box className="cart"> 
+  <Box display="flex" flexDirection="column" padding="1rem"> 
+  <h2>Order Details</h2> 
+  <Box display="flex" flexDirection="row" justifyContent="space-between" >
+  
+  <Box> <p>Products</p> 
+  <p>Subtotal</p> 
+  <p>Shipping Charges</p> 
+  <h3>Total</h3> </Box> 
+  <Box style={{ textAlign: "right" }}> 
+  <p>{getTotalItems(items)}</p> 
+  <p>${getTotalCartValue(items)}</p> 
+  <p>$0</p> 
+  <h3>${getTotalCartValue(items)}</h3> 
+  </Box> 
+  </Box> 
+  </Box> 
+  </Box> </> 
+  ); };
 /**
  * Component to display the Cart view
  * 
@@ -119,12 +162,15 @@ const ItemQuantity = ({
  * @param {Function} handleDelete
  *    Current quantity of product in cart
  * 
+ * @param {Boolean} isReadOnly
+ *    If product quantity on cart is to be displayed as read only without the + - options to change quantity
  * 
  */
 const Cart = ({
   products,
   items = [],
   handleQuantity,
+  isReadOnly=false
 }) => {
 const history=useHistory()
   if (!items.length) {
@@ -167,7 +213,8 @@ const history=useHistory()
             justifyContent="space-between"
             alignItems="center"
         >
-        <ItemQuantity
+        {isReadOnly ? (<Box style={{ fontSize: "1rem" }}>Qty: {data.qty}</Box> ) :
+        (<ItemQuantity
         // Add required props by checking implementation
         value={data.qty}
         handleAdd={()=>
@@ -188,7 +235,7 @@ const history=useHistory()
             data.qty-1
           )
         }
-        />
+        />)}
         <Box padding="0.5rem" fontWeight="700">
             ${data.cost}
         </Box>
@@ -203,18 +250,20 @@ ${getTotalCartValue(items)}
 </Box> 
 </Box>
 
-        <Box display="flex" justifyContent="flex-end" className="cart-footer">
+        {isReadOnly ? null :(<Box display="flex" justifyContent="flex-end" className="cart-footer">
           <Button
             color="primary"
             variant="contained"
             startIcon={<ShoppingCart />}
             className="checkout-btn"
+            isReadOnly
             onClick={()=>history.push("/checkout")}
           >
             Checkout
           </Button>
-        </Box>
+        </Box>)}
       </Box>
+      {isReadOnly ? <OrderDetailsView items={items} /> : null}
     </>
   );
 };
